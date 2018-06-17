@@ -36,7 +36,7 @@ public @interface MySize {
     }
 }
 
-#3 define your message-texts - e.g.:
+#3 define your message-texts (which can use constraint-attributes) - e.g.:
 nameLength=The length of '{propertyLabel}' should be between {min} and {max}
 firstName=Firstname
 lastName=Surname
