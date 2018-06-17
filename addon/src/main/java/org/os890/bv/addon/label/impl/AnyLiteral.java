@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.os890.bv.addon.label.spi;
+package org.os890.bv.addon.label.impl;
 
-import java.util.Locale;
+import javax.enterprise.inject.Any;
+import javax.enterprise.util.AnnotationLiteral;
 
-//to keep it simpler dependent scoped beans are NOT supported.
-//that isn't a techn. limitation - it's just limited to reduce the amount of helpers (copied from deltaspike)
-public interface MessageSourceAdapter {
-    String resolveMessage(String key, Locale locale);
+//copy of org.apache.deltaspike.core.api.literal.AnyLiteral
+public class AnyLiteral extends AnnotationLiteral<Any> implements Any
+{
+    private static final long serialVersionUID = -3623640277155878657L;
 }

@@ -25,9 +25,9 @@
     <packaging>pom</packaging>
 
     <groupId>org.os890.bv.addon</groupId>
-    <artifactId>ds-bv-label-addon-project</artifactId>
+    <artifactId>cdi-bv-label-addon-project</artifactId>
 
-    <name>DeltaSpike Bean-Validation Label Add-on Project</name>
+    <name>CDI Bean-Validation Label Add-on Project</name>
     <version>1.0.0</version>
 
     <modules>
