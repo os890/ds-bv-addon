@@ -17,5 +17,5 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<beans version="1.2" bean-discovery-mode="all">
+<beans version="1.2" bean-discovery-mode="annotated">
 </beans>

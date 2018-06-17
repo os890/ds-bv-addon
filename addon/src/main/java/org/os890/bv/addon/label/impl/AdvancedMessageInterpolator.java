@@ -20,7 +20,6 @@ package org.os890.bv.addon.label.impl;
 
 import org.os890.bv.addon.label.spi.MessageSourceAdapter;
 
-import javax.enterprise.inject.Vetoed;
 import javax.validation.MessageInterpolator;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.io.Serializable;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@Vetoed
 public class AdvancedMessageInterpolator implements MessageInterpolator, Serializable {
     private static final String MESSAGE_ATTRIBUTE_NAME = "message";
     private static final String EXPRESSION_START = "{";

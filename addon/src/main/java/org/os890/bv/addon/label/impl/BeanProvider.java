@@ -20,27 +20,25 @@ package org.os890.bv.addon.label.impl;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Vetoed;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
 //partial copy of org.apache.deltaspike.core.api.provider.BeanProvider
-@Vetoed
-public final class BeanProvider {
+final class BeanProvider {
     private BeanProvider() {
         // this is a utility class which doesn't get instantiated.
     }
 
-    public static <T> T getContextualReference(Class<T> type, boolean optional, Annotation... qualifiers) {
+    static <T> T getContextualReference(Class<T> type, boolean optional, Annotation... qualifiers) {
         BeanManager beanManager = getBeanManager();
 
         Set<Bean<?>> beans = getBeanDefinitions(type, optional, beanManager, qualifiers);
         return getContextualReference(type, beanManager, beans);
     }
 
-    public static <T> List<T> getContextualReferences(Class<T> type, boolean optional) {
+    static <T> List<T> getContextualReferences(Class<T> type, boolean optional) {
         BeanManager beanManager = getBeanManager();
         Set<Bean<?>> beans = getBeanDefinitions(type, optional, beanManager);
 
