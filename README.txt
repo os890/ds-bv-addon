@@ -17,7 +17,7 @@ define a custom (composite-)bv-constraint - e.g.:
 public @interface MySize {
     String message();
 
-    String propertyName();
+    String propertyLabel();
 
     Class<?>[] groups() default {};
 
@@ -37,16 +37,19 @@ public @interface MySize {
 }
 
 #3 define your message-texts - e.g.:
-nameLength=The length of '{propertyName}' should be between {min} and {max}
+nameLength=The length of '{propertyLabel}' should be between {min} and {max}
 firstName=Firstname
 lastName=Surname
 
+#3.1
+optionally implement a custom (@ApplicationScoped) MessageSourceAdapter (if a different message-source should be supported)
+
 #4 use the constraint - e.g.:
 public class Person {
-    @MySize(min = 1, max = 100, message = "{nameLength}", propertyName = "{firstName}")
+    @MySize(min = 1, max = 100, message = "{nameLength}", propertyLabel = "{firstName}")
     private String firstName;
 
-    @MySize(min = 2, max = 100, message = "{nameLength}", propertyName = "{lastName}")
+    @MySize(min = 2, max = 100, message = "{nameLength}", propertyLabel = "{lastName}")
     private String lastName;
 
     //...
