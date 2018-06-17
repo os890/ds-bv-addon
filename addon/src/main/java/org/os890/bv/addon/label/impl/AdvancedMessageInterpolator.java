@@ -21,14 +21,11 @@ package org.os890.bv.addon.label.impl;
 import org.os890.bv.addon.label.spi.MessageSourceAdapter;
 
 import javax.validation.MessageInterpolator;
-import javax.validation.metadata.ConstraintDescriptor;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class AdvancedMessageInterpolator implements MessageInterpolator, Serializable {
-    private static final String MESSAGE_ATTRIBUTE_NAME = "message";
     private static final String EXPRESSION_START = "{";
     private static final String EXPRESSION_END = "}";
 
@@ -57,35 +54,6 @@ public class AdvancedMessageInterpolator implements MessageInterpolator, Seriali
         List<MessageSourceAdapter> messageSourceAdapters = BeanProvider.getContextualReferences(MessageSourceAdapter.class, true);
 
         String result = interpolateText(messageTemplate, context, locale, defaultMessageInterpolator, messageSourceAdapters);
-
-        if (result.contains(EXPRESSION_START) && result.contains(EXPRESSION_END)) {
-            return interpolateAdditionalSyntax(result, context, locale, defaultMessageInterpolator, messageSourceAdapters);
-        }
-        return result;
-    }
-
-    private String interpolateAdditionalSyntax(String textToInterpolate, Context context, Locale locale, MessageInterpolator messageInterpolator, List<MessageSourceAdapter> messageSourceAdapters) {
-        String result = textToInterpolate;
-        ConstraintDescriptor<?> constraintDescriptor = context.getConstraintDescriptor();
-
-        Map<String, Object> annotationAttributes = constraintDescriptor.getAttributes();
-
-        for (Map.Entry<String, Object> entry : annotationAttributes.entrySet()) {
-            Object attributeValue = entry.getValue();
-            if (!(attributeValue instanceof String)) {
-                continue;
-            }
-            String attributeValueAsString = (String) attributeValue;
-
-            if (isSubexpressionToProcess(textToInterpolate, entry.getKey(), attributeValueAsString)) {
-                String subMessageKey = (String) entry.getValue();
-
-                String interpolatedSubtext = interpolateText(subMessageKey, context, locale, messageInterpolator, messageSourceAdapters);
-                if (!subMessageKey.equals(interpolatedSubtext)) {
-                    result = result.replace(attributeValueAsString, interpolatedSubtext);
-                }
-            }
-        }
         return result;
     }
 
@@ -93,8 +61,9 @@ public class AdvancedMessageInterpolator implements MessageInterpolator, Seriali
         String result = defaultMessageInterpolator.interpolate(messageTemplate, context, locale);
 
         if (messageTemplate.equals(result) && messageTemplate.startsWith(EXPRESSION_START) && messageTemplate.endsWith(EXPRESSION_END)) {
+            String key = messageTemplate.substring(1, messageTemplate.length() - 1);
             for (MessageSourceAdapter messageResolver : messageSourceAdapters) {
-                result = messageResolver.resolveMessage(messageTemplate.substring(1, messageTemplate.length() - 1), locale);
+                result = messageResolver.resolveMessage(key, locale);
 
                 if (result.contains(EXPRESSION_START) && result.contains(EXPRESSION_END)) {
                     result = defaultMessageInterpolator.interpolate(result, context, locale); //do the default interpolation/replacement
@@ -106,10 +75,5 @@ public class AdvancedMessageInterpolator implements MessageInterpolator, Seriali
             }
         }
         return result;
-    }
-
-    private boolean isSubexpressionToProcess(String textToInterpolate, String key, String value) {
-        return !key.equals(MESSAGE_ATTRIBUTE_NAME) && value.startsWith(EXPRESSION_START) && value.endsWith(EXPRESSION_END) &&
-            textToInterpolate.contains(value);
     }
 }

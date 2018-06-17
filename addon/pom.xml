@@ -24,9 +24,9 @@
     <packaging>jar</packaging>
 
     <groupId>org.os890.bv.addon</groupId>
-    <artifactId>cdi-bv-label-addon</artifactId>
+    <artifactId>cdi-bv-message-source-addon</artifactId>
 
-    <name>CDI Bean-Validation Label Add-on</name>
+    <name>CDI Bean-Validation Message-Source Add-on</name>
     <version>1.0.0</version>
 
     <repositories>
