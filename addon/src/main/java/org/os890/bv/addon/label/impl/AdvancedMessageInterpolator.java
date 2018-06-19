@@ -18,6 +18,7 @@
  */
 package org.os890.bv.addon.label.impl;
 
+import org.os890.bv.addon.label.spi.MessageTemplateResolver;
 import org.os890.bv.addon.label.spi.MessageSourceAdapter;
 
 import javax.validation.MessageInterpolator;
@@ -31,6 +32,7 @@ public class AdvancedMessageInterpolator implements MessageInterpolator, Seriali
     private static final String MESSAGE_ATTRIBUTE_NAME = "message";
     private static final String EXPRESSION_START = "{";
     private static final String EXPRESSION_END = "}";
+    private static final String DELEGATE_EXPRESSION = "{}";
 
     private final MessageInterpolator wrappedMessageInterpolator;
 
@@ -54,9 +56,25 @@ public class AdvancedMessageInterpolator implements MessageInterpolator, Seriali
             defaultMessageInterpolator = BeanProvider.getContextualReference(MessageInterpolatorFactory.class, false).getDefaultMessageInterpolator();
         }
 
+        if (DELEGATE_EXPRESSION.equals(messageTemplate)) {
+            List<MessageTemplateResolver> messageTemplateResolvers = BeanProvider.getContextualReferences(MessageTemplateResolver.class, true);
+
+            for (MessageTemplateResolver messageTemplateResolver : messageTemplateResolvers) {
+                String resolvedMessageTemplate = messageTemplateResolver.resolveMessageTemplateFor(context.getConstraintDescriptor());
+
+                if (resolvedMessageTemplate != null) {
+                    messageTemplate = resolvedMessageTemplate;
+                }
+            }
+        }
+
         List<MessageSourceAdapter> messageSourceAdapters = BeanProvider.getContextualReferences(MessageSourceAdapter.class, true);
 
         String result = interpolateText(messageTemplate, context, locale, defaultMessageInterpolator, messageSourceAdapters);
+
+        if (result == null) {
+            return messageTemplate;
+        }
 
         if (result.contains(EXPRESSION_START) && result.contains(EXPRESSION_END)) {
             return interpolateAdditionalSyntax(result, context, locale, defaultMessageInterpolator, messageSourceAdapters);
@@ -95,6 +113,10 @@ public class AdvancedMessageInterpolator implements MessageInterpolator, Seriali
         if (messageTemplate.equals(result) && messageTemplate.startsWith(EXPRESSION_START) && messageTemplate.endsWith(EXPRESSION_END)) {
             for (MessageSourceAdapter messageResolver : messageSourceAdapters) {
                 result = messageResolver.resolveMessage(messageTemplate.substring(1, messageTemplate.length() - 1), locale);
+
+                if (result == null) {
+                    continue;
+                }
 
                 if (result.contains(EXPRESSION_START) && result.contains(EXPRESSION_END)) {
                     result = defaultMessageInterpolator.interpolate(result, context, locale); //do the default interpolation/replacement
