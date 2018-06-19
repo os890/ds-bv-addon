@@ -16,28 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.os890.bv.addon.label.test.inmemory;
+package org.os890.bv.addon.label.test.uc.uc003.module2;
 
-import org.os890.bv.addon.label.spi.MessageSourceAdapter;
+import static org.os890.bv.addon.label.test.uc.uc003.module2.ViolationMessagesModule2.VIOLATION_02;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
-import java.util.Locale;
+public class TestPerson2 {
+  @MySize(min = 1, messageId = VIOLATION_02, propertyLabel = "{firstName}")
+  private String firstName;
 
-//enable it autom. for this module (= tests)
-@Alternative
-@Priority(Interceptor.Priority.APPLICATION)
+  @MySize(min = 2, messageId = VIOLATION_02, propertyLabel = "{lastName}")
+  private String lastName;
 
-@ApplicationScoped //don't use @Dependent
-public class TestMessageSourceAdapter implements MessageSourceAdapter {
-    @Inject
-    private TestMessageStorage messageStorage;
+  public TestPerson2(String firstName, String lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
 
-    @Override
-    public String resolveMessage(String key, Locale locale) {
-        return messageStorage.resolveMessage(key);
-    }
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
 }

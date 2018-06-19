@@ -16,28 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.os890.bv.addon.label.test.inmemory;
+package org.os890.bv.addon.label.test.uc.uc001.infrastructure;
 
-import org.os890.bv.addon.label.spi.MessageSourceAdapter;
+import org.os890.bv.addon.label.spi.MessageTemplateResolver;
+import org.os890.bv.addon.label.test.uc.UseCase;
+import org.os890.bv.addon.label.test.uc.uc001.MainCase;
 
-import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
-import java.util.Locale;
+import javax.validation.metadata.ConstraintDescriptor;
 
-//enable it autom. for this module (= tests)
 @Alternative
-@Priority(Interceptor.Priority.APPLICATION)
+@UseCase(MainCase.class)
 
-@ApplicationScoped //don't use @Dependent
-public class TestMessageSourceAdapter implements MessageSourceAdapter {
-    @Inject
-    private TestMessageStorage messageStorage;
-
+@ApplicationScoped
+public class NoOpTemplateResolver implements MessageTemplateResolver {
     @Override
-    public String resolveMessage(String key, Locale locale) {
-        return messageStorage.resolveMessage(key);
+    public String resolveMessageTemplateFor(ConstraintDescriptor<?> constraintDescriptor) {
+        return null;
     }
 }

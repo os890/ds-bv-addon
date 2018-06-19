@@ -16,26 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.os890.bv.addon.label.test.inmemory;
+package org.os890.bv.addon.label.test.uc.uc003.module2;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import java.util.HashMap;
-import java.util.Map;
+import org.os890.bv.addon.label.test.uc.uc003.MessageId;
 
-@ApplicationScoped
-public class InMemoryMessageStorage {
-    private Map<String, String> messageCodeToTextMap;
+public enum ViolationMessagesModule2 implements MessageId {
+    VIOLATION_02(),
+    VIOLATION_0Y();
 
-    @PostConstruct
-    protected void init() {
-        messageCodeToTextMap = new HashMap<>();
-        messageCodeToTextMap.put("nameLength", "The length of '{propertyLabel}' should be between {min} and {max}");
-        messageCodeToTextMap.put("firstName", "Firstname");
-        messageCodeToTextMap.put("lastName", "Surname");
-    }
-
-    public String resolveMessage(String key) {
-        return messageCodeToTextMap.get(key);
+    @Override
+    public String getId() {
+        return name();
     }
 }

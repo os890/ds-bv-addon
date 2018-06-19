@@ -16,28 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.os890.bv.addon.label.test.inmemory;
+package org.os890.bv.addon.label.test.uc.uc001.infrastructure;
 
-import org.os890.bv.addon.label.spi.MessageSourceAdapter;
+import org.os890.bv.addon.label.test.inmemory.TestMessageStorage;
+import org.os890.bv.addon.label.test.uc.UseCase;
+import org.os890.bv.addon.label.test.uc.uc001.MainCase;
 
-import javax.annotation.Priority;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
-//enable it autom. for this module (= tests)
 @Alternative
-@Priority(Interceptor.Priority.APPLICATION)
+@UseCase(MainCase.class)
 
-@ApplicationScoped //don't use @Dependent
-public class TestMessageSourceAdapter implements MessageSourceAdapter {
-    @Inject
-    private TestMessageStorage messageStorage;
+@ApplicationScoped
+public class InMemoryMessageStorage implements TestMessageStorage {
+    private Map<String, String> messageCodeToTextMap;
 
-    @Override
-    public String resolveMessage(String key, Locale locale) {
-        return messageStorage.resolveMessage(key);
+    @PostConstruct
+    protected void init() {
+        messageCodeToTextMap = new HashMap<>();
+        messageCodeToTextMap.put("nameLength", "The length of '{propertyLabel}' should be between {min} and {max}");
+        messageCodeToTextMap.put("firstName", "Firstname");
+        messageCodeToTextMap.put("lastName", "Surname");
+    }
+
+    public String resolveMessage(String key) {
+        return messageCodeToTextMap.get(key);
     }
 }

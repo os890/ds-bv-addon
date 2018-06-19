@@ -1,4 +1,4 @@
-package org.os890.bv.addon.label.test.uc.shared;
+package org.os890.bv.addon.label.test.uc.uc001;
 
 public class TestPerson {
     @MySize(min = 1, message = "{nameLength}", propertyLabel = "{firstName}")

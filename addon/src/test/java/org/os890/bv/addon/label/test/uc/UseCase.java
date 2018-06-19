@@ -16,28 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.os890.bv.addon.label.test.inmemory;
+package org.os890.bv.addon.label.test.uc;
 
-import org.os890.bv.addon.label.spi.MessageSourceAdapter;
+import org.apache.deltaspike.testcontrol.api.TestControl;
+import org.os890.bv.addon.label.test.infrastructure.TestLabelBinding;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
-import java.util.Locale;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-//enable it autom. for this module (= tests)
-@Alternative
-@Priority(Interceptor.Priority.APPLICATION)
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@ApplicationScoped //don't use @Dependent
-public class TestMessageSourceAdapter implements MessageSourceAdapter {
-    @Inject
-    private TestMessageStorage messageStorage;
+@TestLabelBinding
 
-    @Override
-    public String resolveMessage(String key, Locale locale) {
-        return messageStorage.resolveMessage(key);
-    }
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface UseCase {
+    Class<? extends TestControl.Label> value();
 }

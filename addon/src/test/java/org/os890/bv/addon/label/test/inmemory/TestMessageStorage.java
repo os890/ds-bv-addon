@@ -18,26 +18,6 @@
  */
 package org.os890.bv.addon.label.test.inmemory;
 
-import org.os890.bv.addon.label.spi.MessageSourceAdapter;
-
-import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
-import java.util.Locale;
-
-//enable it autom. for this module (= tests)
-@Alternative
-@Priority(Interceptor.Priority.APPLICATION)
-
-@ApplicationScoped //don't use @Dependent
-public class TestMessageSourceAdapter implements MessageSourceAdapter {
-    @Inject
-    private TestMessageStorage messageStorage;
-
-    @Override
-    public String resolveMessage(String key, Locale locale) {
-        return messageStorage.resolveMessage(key);
-    }
+public interface TestMessageStorage {
+    String resolveMessage(String key);
 }

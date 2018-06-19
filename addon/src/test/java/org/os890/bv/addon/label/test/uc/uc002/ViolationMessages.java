@@ -16,28 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.os890.bv.addon.label.test.inmemory;
+package org.os890.bv.addon.label.test.uc.uc002;
 
-import org.os890.bv.addon.label.spi.MessageSourceAdapter;
-
-import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
-import java.util.Locale;
-
-//enable it autom. for this module (= tests)
-@Alternative
-@Priority(Interceptor.Priority.APPLICATION)
-
-@ApplicationScoped //don't use @Dependent
-public class TestMessageSourceAdapter implements MessageSourceAdapter {
-    @Inject
-    private TestMessageStorage messageStorage;
+public enum ViolationMessages implements MessageId {
+    VIOLATION_01(),
+    VIOLATION_0X();
 
     @Override
-    public String resolveMessage(String key, Locale locale) {
-        return messageStorage.resolveMessage(key);
+    public String getId() {
+        return name();
     }
 }

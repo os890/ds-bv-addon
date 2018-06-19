@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.os890.bv.addon.label.test.uc.shared;
+package org.os890.bv.addon.label.test.uc.uc003.module1;
+
+import org.os890.bv.addon.label.test.uc.uc003.shared.SharedSize;
 
 import javax.validation.Constraint;
 import javax.validation.OverridesAttribute;
 import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
-import javax.validation.constraints.Size;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -31,23 +32,25 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @ReportAsSingleViolation
 
-@Size
+@SharedSize
 @Constraint(validatedBy = {})
 @Target({FIELD, METHOD, PARAMETER})
 @Retention(RUNTIME)
 public @interface MySize {
     //std. annotation-attributes (required by the spec.)
-    String message();
+    String message() default "{}"; //delegates to #messageId
+
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
     //custom annotation-attributes
+    ViolationMessagesModule1 messageId();
     String propertyLabel();
 
-    @OverridesAttribute(constraint = Size.class, name = "min")
+    @OverridesAttribute(constraint = SharedSize.class, name = "min")
     int min() default 0;
 
-    @OverridesAttribute(constraint = Size.class, name = "max")
+    @OverridesAttribute(constraint = SharedSize.class, name = "max")
     int max() default Integer.MAX_VALUE;
 
     @Target({FIELD, METHOD, PARAMETER})

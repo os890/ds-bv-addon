@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.os890.bv.addon.label.test.infrastructure.BaseTestForLibIndependentOfDeltaSpike;
-import org.os890.bv.addon.label.test.uc.shared.TestPerson;
+import org.os890.bv.addon.label.test.uc.UseCase;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
@@ -15,6 +15,7 @@ import java.util.Set;
 import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(CdiTestRunner.class)
+@UseCase(MainCase.class)
 public class AlternativeMessageSourceTest extends BaseTestForLibIndependentOfDeltaSpike {
     @Inject
     private Validator validator;
