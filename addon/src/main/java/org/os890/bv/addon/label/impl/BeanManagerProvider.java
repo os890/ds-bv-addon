@@ -4,23 +4,34 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-class BeanManagerProvider {
-    private static final BeanManagerProvider INSTANCE = new BeanManagerProvider();
+public class BeanManagerProvider {
+    private final static BeanManagerProvider INSTANCE = new BeanManagerProvider();
 
-    static BeanManagerProvider getInstance() {
+    private BeanManager customBeanManager; //workaround which wouldn't be needed with deltaspike
+
+    public static BeanManagerProvider getInstance() {
         return INSTANCE;
     }
 
     BeanManager getBeanManager() {
         try
         {
+            if (customBeanManager != null) {
+                return customBeanManager;
+            }
+
             // this location is specified in JSR-299 and must be
             // supported in all certified EE environments
-            return (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
+            customBeanManager = (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
+            return customBeanManager;
         }
         catch (NamingException e)
         {
             throw new IllegalStateException(e);
         }
+    }
+
+    public void setBeanManager(BeanManager beanManager) {
+        INSTANCE.customBeanManager = beanManager;
     }
 }
