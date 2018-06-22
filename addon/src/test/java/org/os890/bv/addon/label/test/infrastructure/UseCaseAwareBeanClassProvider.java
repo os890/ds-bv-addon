@@ -45,6 +45,10 @@ public class UseCaseAwareBeanClassProvider implements AlternativeBeanClassProvid
 
         alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc003.infrastructure.InMemoryTypedMessageStorage.class);
         alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc003.infrastructure.EnumMessageTemplateResolver.class);
+
+        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc004.infrastructure.InMemoryTypedMessageStorage.class);
+        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc004.infrastructure.EnumMessageTemplateResolver.class);
+        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc004.infrastructure.EnumLabelsResolver.class);
     }
 
     @Override

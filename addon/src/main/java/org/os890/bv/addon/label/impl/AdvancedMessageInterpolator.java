@@ -18,15 +18,14 @@
  */
 package org.os890.bv.addon.label.impl;
 
+import org.os890.bv.addon.label.spi.LabelResolver;
 import org.os890.bv.addon.label.spi.MessageTemplateResolver;
 import org.os890.bv.addon.label.spi.MessageSourceAdapter;
 
 import javax.validation.MessageInterpolator;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class AdvancedMessageInterpolator implements MessageInterpolator, Serializable {
     private static final String MESSAGE_ATTRIBUTE_NAME = "message";
@@ -83,6 +82,42 @@ public class AdvancedMessageInterpolator implements MessageInterpolator, Seriali
     }
 
     private String interpolateAdditionalSyntax(String textToInterpolate, Context context, Locale locale, MessageInterpolator messageInterpolator, List<MessageSourceAdapter> messageSourceAdapters) {
+        String result = textToInterpolate;
+        ConstraintDescriptor<?> constraintDescriptor = context.getConstraintDescriptor();
+
+        List<LabelResolver> labelResolvers = BeanProvider.getContextualReferences(LabelResolver.class, true);
+
+        Set<String> labels = new HashSet<>();
+        for (LabelResolver labelResolver : labelResolvers) {
+            labels.addAll(labelResolver.resolveLabelsFor(constraintDescriptor));
+        }
+
+        for (String label : labels) {
+            String resolvedLabel = messageInterpolator.interpolate(label, context);
+
+            if (resolvedLabel != null && resolvedLabel.startsWith(EXPRESSION_START) && resolvedLabel.endsWith(EXPRESSION_END)) {
+                String key = resolvedLabel.substring(1, resolvedLabel.length() - 1);
+                for (MessageSourceAdapter messageSourceAdapter : messageSourceAdapters) {
+                    resolvedLabel = messageSourceAdapter.resolveMessage(key, locale);
+
+                    if (resolvedLabel != null && !label.equals(resolvedLabel)) {
+                        break;
+                    }
+                }
+            }
+
+            if (resolvedLabel != null && !label.equals(resolvedLabel)) {
+                result = result.replace(label, resolvedLabel);
+            }
+        }
+
+        if (result.contains(EXPRESSION_START) && result.contains(EXPRESSION_END)) {
+            return interpolateAdditionalStringSyntax(textToInterpolate, context, locale, messageInterpolator, messageSourceAdapters);
+        }
+        return result;
+    }
+
+    private String interpolateAdditionalStringSyntax(String textToInterpolate, Context context, Locale locale, MessageInterpolator messageInterpolator, List<MessageSourceAdapter> messageSourceAdapters) {
         String result = textToInterpolate;
         ConstraintDescriptor<?> constraintDescriptor = context.getConstraintDescriptor();
 
