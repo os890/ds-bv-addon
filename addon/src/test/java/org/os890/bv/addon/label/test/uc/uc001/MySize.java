@@ -38,7 +38,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface MySize {
     //std. annotation-attributes (required by the spec.)
     String message();
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
     //custom annotation-attributes

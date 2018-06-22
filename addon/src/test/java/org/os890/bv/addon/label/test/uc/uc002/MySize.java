@@ -40,6 +40,7 @@ public @interface MySize {
     String message() default "{}"; //delegates to #messageId
 
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
     //custom annotation-attributes

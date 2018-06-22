@@ -21,22 +21,22 @@ package org.os890.bv.addon.label.test.uc.uc002;
 import static org.os890.bv.addon.label.test.uc.uc002.ViolationMessages.VIOLATION_01;
 
 public class TestPerson {
-  @MySize(min = 1, messageId = VIOLATION_01, propertyLabel = "{firstName}")
-  private String firstName;
+    @MySize(min = 1, messageId = VIOLATION_01, propertyLabel = "{firstName}")
+    private String firstName;
 
-  @MySize(min = 2, messageId = VIOLATION_01, propertyLabel = "{lastName}")
-  private String lastName;
+    @MySize(min = 2, messageId = VIOLATION_01, propertyLabel = "{lastName}")
+    private String lastName;
 
-  public TestPerson(String firstName, String lastName) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-  }
+    public TestPerson(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
-  public String getFirstName() {
-    return firstName;
-  }
+    public String getFirstName() {
+        return firstName;
+    }
 
-  public String getLastName() {
-    return lastName;
-  }
+    public String getLastName() {
+        return lastName;
+    }
 }

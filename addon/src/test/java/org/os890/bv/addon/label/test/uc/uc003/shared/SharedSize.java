@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @ReportAsSingleViolation
@@ -40,6 +40,7 @@ public @interface SharedSize {
     String message() default "{}"; //delegates to #messageId
 
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
     @OverridesAttribute(constraint = Size.class, name = "min")
