@@ -21,7 +21,13 @@ package org.os890.bv.addon.label.test.infrastructure;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.spi.alternative.AlternativeBeanClassProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.xbean.finder.AnnotationFinder;
+import org.apache.xbean.finder.ClassLoaders;
+import org.apache.xbean.finder.archive.ClasspathArchive;
 
+import javax.enterprise.inject.Alternative;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,20 +41,15 @@ public class UseCaseAwareBeanClassProvider implements AlternativeBeanClassProvid
     //just a simple list to test custom bindings
     private static List<Class> alternativeImplementations = new ArrayList<>();
 
-    {
-        //can be replaced with classpath-scanning >before< the cdi-container gets started or via a text-based ds-config
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc001.infrastructure.InMemoryMessageStorage.class);
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc001.infrastructure.NoOpTemplateResolver.class);
-
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc002.infrastructure.InMemoryTypedMessageStorage.class);
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc002.infrastructure.EnumMessageTemplateResolver.class);
-
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc003.infrastructure.InMemoryTypedMessageStorage.class);
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc003.infrastructure.EnumMessageTemplateResolver.class);
-
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc004.infrastructure.InMemoryTypedMessageStorage.class);
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc004.infrastructure.EnumMessageTemplateResolver.class);
-        alternativeImplementations.add(org.os890.bv.addon.label.test.uc.uc004.infrastructure.EnumLabelsResolver.class);
+    static {
+        try {
+            ClassLoader classLoader = UseCaseAwareBeanClassProvider.class.getClassLoader();
+            alternativeImplementations.addAll(
+                new AnnotationFinder(new ClasspathArchive(classLoader, ClassLoaders.findUrls(classLoader)))
+                    .findAnnotatedClasses(Alternative.class));
+        } catch (IOException e) {
+            throw ExceptionUtils.throwAsRuntimeException(e);
+        }
     }
 
     @Override
